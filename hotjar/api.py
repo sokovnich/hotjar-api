@@ -2,6 +2,8 @@ import json
 import math
 import requests
 
+from typing import Optional
+
 from .exceptions import AuthorizationError
 
 
@@ -24,25 +26,31 @@ class HotjarAPI:
 
     def get_current_user_info(self) -> dict:
         """
-        Get current user info
+        Get current user info.
 
-        :return:
+        :return: user info
         """
         response = self.session.get(self.user_info_url)
         return response.json()
 
-    def get_site_feed(self, site_id):
+    def get_site_feed(self, site_id: int) -> list:
+        """
+        Get site feed.
+
+        :param site_id: site id
+        :return: site feed
+        """
         response = self.session.get(
             f"https://insights.hotjar.com/api/v1/sites/{site_id}/feed"
         )
         return response.json()
 
-    def get_site_statistics(self, site_id):
+    def get_site_statistics(self, site_id: int) -> dict:
         """
-        Get site statistics
+        Get site statistics.
 
-        :param site_id:
-        :return:
+        :param site_id: site id
+        :return: site statistics
         """
 
         response = self.session.get(
@@ -50,12 +58,12 @@ class HotjarAPI:
         )
         return response.json()
 
-    def get_resources(self, user_id=None) -> dict:
+    def get_resources(self, user_id: Optional[int] = None) -> dict:
         """
         Get sites and organizations info.
-        If user_id is None, get currently logged user info.
+        If user_id is None, get currently logged user resources.
 
-        :return: info
+        :return: resources info
         """
         if not user_id:
             user_id = self.user_id
@@ -65,19 +73,34 @@ class HotjarAPI:
         )
         return response.json()
 
-    def get_feedback_widgets(self, site_id):
+    def get_feedback_widgets(self, site_id: int) -> list:
+        """
+        Get all feedback widgets for specified site.
+
+        :param site_id: site id
+        :return: feedback widgets info
+        """
         response = self.session.get(
             f"https://insights.hotjar.com/api/v1/sites/{site_id}/feedback"
         )
         return response.json()
 
-    def get_feedback(
+    def get_feedbacks(
         self,
         site_id: int,
         widget_id: int,
         limit: int = 100,
         _filter: str = "created__ge__2019-01-21",
-    ) -> dict:
+    ) -> list:
+        """
+        Get feedback list.
+
+        :param site_id: site id
+        :param widget_id: feedback widget id
+        :param limit: feedbacks limit
+        :param _filter: filter
+        :return: feedback info, list
+        """
         fields = [
             "browser",
             "content",
@@ -112,7 +135,7 @@ class HotjarAPI:
                 f"https://insights.hotjar.com/api/v1/sites/{site_id}/feedback/{widget_id}/responses",
                 params=params,
             )
-            result += response.json()['data']
+            result += response.json()["data"]
 
             offset += amount
 
