@@ -97,8 +97,8 @@ class HotjarAPI:
 
         :param site_id: site id
         :param widget_id: feedback widget id
-        :param limit: feedbacks limit
         :param _filter: filter
+        :param limit: feedbacks limit
         :return: feedback info, list
         """
         fields = [
@@ -145,6 +145,21 @@ class HotjarAPI:
             offset += amount
 
         return result
+
+    def get_sentiments(self, site_id: int, widget_id: int, _filter: str) -> dict:
+        """
+        Get user sentiments info.
+
+        :param site_id: site id
+        :param widget_id: feedback widget id
+        :param _filter: filter
+        :return: sentiments info
+        """
+        response = self.session.get(
+            f"https://insights.hotjar.com/api/v1/sites/{site_id}/feedback/{widget_id}/responses/sentiment",
+            params={"filter": _filter},
+        )
+        return response.json()
 
     def login(self, email: str, password: str) -> dict:
         """
