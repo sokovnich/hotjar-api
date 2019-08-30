@@ -121,6 +121,11 @@ class HotjarAPI:
         amount = 100
         result = []
         offset = 0
+        count = self._get_feedbacks_count(
+            _filter=_filter, site_id=site_id, widget_id=widget_id
+        )
+
+        limit = count if count < limit else limit
 
         for i in range(math.ceil(limit / 100)):
             params = dict(
@@ -169,3 +174,22 @@ class HotjarAPI:
             raise AuthorizationError(response.text)
 
         return result
+
+    def _get_feedbacks_count(self, site_id: int, widget_id: int, _filter: str) -> int:
+        """
+        Feedbacks count pre-request
+
+        :param site_id: site id
+        :param widget_id: feedback widget id
+        :param limit: feedbacks limit
+        :param _filter: filter
+        :return: feedback info, list
+        """
+        response = self.session.get(
+            f"https://insights.hotjar.com/api/v1/sites/{site_id}/feedback/{widget_id}/responses",
+            params=dict(
+                fields="id", amount=0, offset=0, count="true", filter={_filter}
+            ),
+        )
+
+        return response.json()["count"]
