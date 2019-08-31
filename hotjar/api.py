@@ -89,8 +89,8 @@ class HotjarAPI:
         self,
         site_id: int,
         widget_id: int,
-        limit: int = 100,
-        _filter: str = "created__ge__2019-01-21",
+        _filter: str,
+        limit: int = 100
     ) -> list:
         """
         Get feedback list.
@@ -98,6 +98,8 @@ class HotjarAPI:
         :param site_id: site id
         :param widget_id: feedback widget id
         :param _filter: filter
+        get feedbacks received between 2019-01-01 and 2019-02-01:
+        'created__ge__2019-01-01,created__le__2019-02-01'
         :param limit: feedbacks limit
         :return: feedback info, list
         """
