@@ -15,7 +15,7 @@ with open(
 
 setup(
     name="hotjar",
-    version="0.0.1",
+    version="0.0.2",
     packages=find_packages(exclude=["tests*"]),
     author="Sokovnich Yan",
     author_email="x6@live.ru",
